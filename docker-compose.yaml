@@ -1,0 +1,20 @@
+version: "3.0"
+services:
+  mongodb:
+    entrypoint: ["tail", "-f", "/dev/null"]
+    image: mongo
+    restart: unless-stopped
+    ports:
+      - 27001:27001
+      - 27002:27002
+      - 27003:27003
+      - 27004:27004
+      - 27005:27005
+      - 27006:27006
+      - 27011:27011
+      - 27012:27012
+      - 27013:27013
+      - 27100:27100
+    volumes:
+      - ./data:/var/lib/mongodb_new:rw
+         

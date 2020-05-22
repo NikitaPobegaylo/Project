@@ -1,0 +1,37 @@
+/var/lib/mongodb_new
+
+mongod --shardsvr --port 27001 --dbpath /var/lib/mongodb_new/mongodb1 --logpath /var/lib/mongodb_new/l1 --replSet rs0 &
+mongod --shardsvr --port 27002 --dbpath /var/lib/mongodb_new/mongodb2 --logpath /var/lib/mongodb_new/l2 --replSet rs0 &
+mongod --shardsvr --port 27003 --dbpath /var/lib/mongodb_new/mongodb3 --logpath /var/lib/mongodb_new/l3 --replSet rs0 &
+mongo --port 27001
+// rs.initiate()
+// rs.add("localhost:27002", false)
+// rs.add("localhost:27003", false)
+// rs.conf()
+// rs.status()
+
+mongod --shardsvr --port 27004 --dbpath /var/lib/mongodb_new/mongodb4 --logpath /var/lib/mongodb_new/l4 --replSet rs1 &
+mongod --shardsvr --port 27005 --dbpath /var/lib/mongodb_new/mongodb5 --logpath /var/lib/mongodb_new/l5 --replSet rs1 &
+mongod --shardsvr --port 27006 --dbpath /var/lib/mongodb_new/mongodb6 --logpath /var/lib/mongodb_new/l6 --replSet rs1 &
+mongo --port 27004
+// rs.initiate()
+// rs.add("localhost:27005", false)
+// rs.add("localhost:27006", false)
+// rs.conf()
+// rs.status()
+
+mongod --configsvr --port 27011 --dbpath /var/lib/mongodb_new/mongodb7 --logpath /var/lib/mongodb_new/l7 --replSet configReplSet &
+mongod --configsvr --port 27012 --dbpath /var/lib/mongodb_new/mongodb8 --logpath /var/lib/mongodb_new/l8 --replSet configReplSet &
+mongod --configsvr --port 27013 --dbpath /var/lib/mongodb_new/mongodb9 --logpath /var/lib/mongodb_new/l9 --replSet configReplSet &
+mongo --port 27011
+// rs.initiate()
+// rs.add("localhost:27012", false)
+// rs.add("localhost:27013", false)
+// rs.conf()
+// rs.status()
+
+mongos --configdb configReplSet/localhost:27011,localhost:27012,localhost:27013 --port 27100 &
+mongo --port 27100
+// sh.addShard("rs0/localhost:27001,localhost:27002,localhost:27003")
+// sh.addShard("rs1/localhost:27004,localhost:27005,localhost:27006")
+// sh.status()

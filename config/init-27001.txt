@@ -1,0 +1,5 @@
+rs.initiate()
+rs.add("localhost:27002", false)
+rs.add("localhost:27003", false)
+rs.conf()
+rs.status()

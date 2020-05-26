@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 
+# https://docs.python.org/3.4/library/unittest.html
+# https://docs.python.org/3/library/unittest.html
 import unittest
 from leagues import *
 

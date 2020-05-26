@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+
+# https://www.statsmodels.org/dev/generated/statsmodels.tsa.arima_model.ARIMA.html
+
 from api.teams import *
 from api.leagues import *
 from api.stats import *

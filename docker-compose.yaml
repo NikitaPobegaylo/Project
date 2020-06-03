@@ -17,10 +17,19 @@ services:
       - 27100:27100
     volumes:
       - ./data:/data:rw
-      - ./config/run.sh:/run.sh:ro
-      - ./config/init.sh:/init.sh:ro
+      - ./config/mongod-001.conf:/mongod-001.conf:ro
+      - ./config/mongod-002.conf:/mongod-002.conf:ro
+      - ./config/mongod-003.conf:/mongod-003.conf:ro
       - ./config/init-27001.txt:/init-27001.txt:ro
+      - ./config/mongod-004.conf:/mongod-004.conf:ro
+      - ./config/mongod-005.conf:/mongod-005.conf:ro
+      - ./config/mongod-006.conf:/mongod-006.conf:ro
       - ./config/init-27004.txt:/init-27004.txt:ro
+      - ./config/mongod-011.conf:/mongod-011.conf:ro
+      - ./config/mongod-012.conf:/mongod-012.conf:ro
+      - ./config/mongod-013.conf:/mongod-013.conf:ro
       - ./config/init-27011.txt:/init-27011.txt:ro
+      - ./config/mongos-100.conf:/mongos-100.conf:ro
       - ./config/init-27100.txt:/init-27100.txt:ro
+      - ./config/run.sh:/run.sh:ro
          

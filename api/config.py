@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 
+# https://rapidapi.com/api-sports/api/api-football?endpoint=apiendpoint_7a821242-d84f-499d-a35a-7d0079ba4228
+
 # headers = {
 #     "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
 #     "X-RapidAPI-Key": "a0adcd28ffmsh29f567331ce0cbap143ac2jsn5ffb61a1b960"

@@ -1,3 +1,7 @@
 sh.addShard("rs0/localhost:27001,localhost:27002,localhost:27003")
 sh.addShard("rs1/localhost:27004,localhost:27005,localhost:27006")
 sh.status()
+sh.enableSharding("test")
+sh.shardCollection("test.countries", { "country": "hashed" })
+sh.shardCollection("test.leagues", { "league_id": 1 })
+sh.shardCollection("test.teams", { "team_id": 1 })

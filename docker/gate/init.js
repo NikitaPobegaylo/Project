@@ -1,5 +1,5 @@
-sh.addShard("rs0/localhost:27001,localhost:27002,localhost:27003")
-sh.addShard("rs1/localhost:27004,localhost:27005,localhost:27006")
+sh.addShard("rs0/rs0a:27017,rs0b:27017,rs0c:27017")
+sh.addShard("rs1/rs1a:27017,rs1b:27017,rs1c:27017")
 sh.status()
 sh.enableSharding("test")
 sh.shardCollection("test.countries", { "country": "hashed" })

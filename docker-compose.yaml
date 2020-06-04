@@ -1,35 +1,175 @@
 version: "3.0"
+
+
 services:
-  mongodb:
-    entrypoint: ["/run.sh", ""]
-    image: mongo
-    restart: unless-stopped
+
+  cfga:
+    depends_on:
+      - cfgb
+      - cfgc
+    entrypoint: ["mongod", "--config", "/etc/mongod.conf"]
+    env_file: "./docker/env"
+    image: "mongo:3.6.18"
     ports:
-      - 27001:27001
-      - 27002:27002
-      - 27003:27003
-      - 27004:27004
-      - 27005:27005
-      - 27006:27006
-      - 27011:27011
-      - 27012:27012
-      - 27013:27013
-      - 27100:27100
+      - "27001:27017"
+    restart: "unless-stopped"
     volumes:
-      - ./data:/data:rw
-      - ./config/mongod-001.conf:/mongod-001.conf:ro
-      - ./config/mongod-002.conf:/mongod-002.conf:ro
-      - ./config/mongod-003.conf:/mongod-003.conf:ro
-      - ./config/init-27001.txt:/init-27001.txt:ro
-      - ./config/mongod-004.conf:/mongod-004.conf:ro
-      - ./config/mongod-005.conf:/mongod-005.conf:ro
-      - ./config/mongod-006.conf:/mongod-006.conf:ro
-      - ./config/init-27004.txt:/init-27004.txt:ro
-      - ./config/mongod-011.conf:/mongod-011.conf:ro
-      - ./config/mongod-012.conf:/mongod-012.conf:ro
-      - ./config/mongod-013.conf:/mongod-013.conf:ro
-      - ./config/init-27011.txt:/init-27011.txt:ro
-      - ./config/mongos-100.conf:/mongos-100.conf:ro
-      - ./config/init-27100.txt:/init-27100.txt:ro
-      - ./config/run.sh:/run.sh:ro
+      - "./docker/cfg/mongod.conf:/etc/mongod.conf:ro"
+
+  cfgb:
+    entrypoint: ["mongod", "--config", "/etc/mongod.conf"]
+    env_file: "./docker/env"
+    image: "mongo:3.6.18"
+    ports:
+      - "27002:27017"
+    restart: "unless-stopped"
+    volumes:
+      - "./docker/cfg/mongod.conf:/etc/mongod.conf:ro"
+
+  cfgc:
+    entrypoint: ["mongod", "--config", "/etc/mongod.conf"]
+    env_file: "./docker/env"
+    image: "mongo:3.6.18"
+    ports:
+      - "27003:27017"
+    restart: "unless-stopped"
+    volumes:
+      - "./docker/cfg/mongod.conf:/etc/mongod.conf:ro"
+
+
+  rs0a:
+    depends_on:
+      - rs0b
+      - rs0c
+    entrypoint: ["mongod", "--config", "/etc/mongod.conf"]
+    env_file: "./docker/env"
+    image: "mongo:3.6.18"
+    ports:
+      - "27011:27017"
+    restart: "unless-stopped"
+    volumes:
+      - "./docker/rs0/mongod.conf:/etc/mongod.conf:ro"
+
+  rs0b:
+    entrypoint: ["mongod", "--config", "/etc/mongod.conf"]
+    env_file: "./docker/env"
+    image: "mongo:3.6.18"
+    ports:
+      - "27012:27017"
+    restart: "unless-stopped"
+    volumes:
+      - "./docker/rs0/mongod.conf:/etc/mongod.conf:ro"
+
+  rs0c:
+    entrypoint: ["mongod", "--config", "/etc/mongod.conf"]
+    env_file: "./docker/env"
+    image: "mongo:3.6.18"
+    ports:
+      - "27013:27017"
+    restart: "unless-stopped"
+    volumes:
+      - "./docker/rs0/mongod.conf:/etc/mongod.conf:ro"
+
+
+  rs1a:
+    depends_on:
+      - rs1b
+      - rs1c
+    entrypoint: ["mongod", "--config", "/etc/mongod.conf"]
+    env_file: "./docker/env"
+    image: "mongo:3.6.18"
+    ports:
+      - "27021:27017"
+    restart: "unless-stopped"
+    volumes:
+      - "./docker/rs1/mongod.conf:/etc/mongod.conf:ro"
+
+  rs1b:
+    entrypoint: ["mongod", "--config", "/etc/mongod.conf"]
+    env_file: "./docker/env"
+    image: "mongo:3.6.18"
+    ports:
+      - "27022:27017"
+    restart: "unless-stopped"
+    volumes:
+      - "./docker/rs1/mongod.conf:/etc/mongod.conf:ro"
+
+  rs1c:
+    entrypoint: ["mongod", "--config", "/etc/mongod.conf"]
+    env_file: "./docker/env"
+    image: "mongo:3.6.18"
+    ports:
+      - "27023:27017"
+    restart: "unless-stopped"
+    volumes:
+      - "./docker/rs1/mongod.conf:/etc/mongod.conf:ro"
+
+
+  gate:
+    depends_on:
+      - cfga
+      - rs0a
+      - rs1a
+    entrypoint: ["mongos", "--config", "/etc/mongos.conf"]
+    env_file: "./docker/env"
+    image: "mongo:3.6.18"
+    ports:
+      - "27017:27017"
+    restart: "unless-stopped"
+    volumes:
+      - "./docker/gate/mongos.conf:/etc/mongos.conf:ro"
+
+
+  test:
+    depends_on:
+      - gate
+    env_file: "./docker/env"
+    image: "mongo:3.6.18"
+    ports:
+      - "27000:27017"
+    restart: "unless-stopped"
+    volumes:
+      - "./docker/cfg/init.js:/init-cfg.js:ro"
+      - "./docker/gate/init.js:/init-gate.js:ro"
+      - "./docker/rs0/init.js:/init-rs0.js:ro"
+      - "./docker/rs1/init.js:/init-rs1.js:ro"
+      - "./docker/run.sh:/run.sh:ro"
+
+
+  # mongodb:
+  #  entrypoint: ["/run.sh", ""]
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: "root"
+  #     MONGO_INITDB_ROOT_PASSWORD: "root"
+  #   image: "mongo:3.6.18"
+  #   restart: "unless-stopped"
+  #   ports:
+  #     # - "27017:27017"
+  #     - "27001:27001"
+  #     - "27002:27002"
+  #     - "27003:27003"
+  #     - "27004:27004"
+  #     - "27005:27005"
+  #     - "27006:27006"
+  #     - "27011:27011"
+  #     - "27012:27012"
+  #     - "27013:27013"
+  #     - "27100:27100"
+  #   volumes:
+  #     - "./data:/data:rw"
+  #     - "./config/mongod-001.conf:/mongod-001.conf:ro"
+  #     - "./config/mongod-002.conf:/mongod-002.conf:ro"
+  #     - "./config/mongod-003.conf:/mongod-003.conf:ro"
+  #     - "./config/init-27001.txt:/init-27001.txt:ro"
+  #     - "./config/mongod-004.conf:/mongod-004.conf:ro"
+  #     - "./config/mongod-005.conf:/mongod-005.conf:ro"
+  #     - "./config/mongod-006.conf:/mongod-006.conf:ro"
+  #     - "./config/init-27004.txt:/init-27004.txt:ro"
+  #     - "./config/mongod-011.conf:/mongod-011.conf:ro"
+  #     - "./config/mongod-012.conf:/mongod-012.conf:ro"
+  #     - "./config/mongod-013.conf:/mongod-013.conf:ro"
+  #     - "./config/init-27011.txt:/init-27011.txt:ro"
+  #     - "./config/mongos-100.conf:/mongos-100.conf:ro"
+  #     - "./config/init-27100.txt:/init-27100.txt:ro"
+  #     - "./config/run.sh:/run.sh:ro"
          

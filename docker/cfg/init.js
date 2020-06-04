@@ -1,0 +1,5 @@
+rs.initiate()
+rs.add("cfg-1:27017", false)
+rs.add("cfg-2:27017", false)
+rs.conf()
+rs.status()
